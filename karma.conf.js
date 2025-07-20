@@ -8,10 +8,8 @@ module.exports = function (config) {
     plugins: [
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
-      require('karma-jasmine-html-reporter'),
-      require('karma-coverage'),
-      require('@angular-devkit/build-angular/plugins/karma'),
-      require('karma-junit-reporter') // <--- THIS LINE IS ABSOLUTELY ESSENTIAL AND MUST BE PRESENT
+      require('karma-junit-reporter'),
+      require('@angular-devkit/build-angular/plugins/karma')
     ],
     client: {
       jasmine: {
@@ -34,13 +32,11 @@ module.exports = function (config) {
     },
     // IMPORTANT: Let's simplify reporters for now to isolate the issue.
     // Temporarily remove 'kjhtml' to ensure no conflicts.
-    reporters: ['progress', 'junit'], // <--- Ensure 'junit' is here. Removed 'kjhtml' temporarily.
+    reporters: ['progress', 'junit'],
     junitReporter: {
-      outputDir: require('path').join(__dirname, './test-results'),
-      outputFile: 'junit-report.xml', // <--- Ensure this matches the Jenkinsfile
-      suite: '',
-      useBrowserName: false,
-      xmlVersion: '1'
+      outputDir: 'test-results',        // relative to workspace root
+      outputFile: 'junit-report.xml',   // single file for all tests
+      useBrowserName: false   
     },
     port: 9876,
     colors: true,
