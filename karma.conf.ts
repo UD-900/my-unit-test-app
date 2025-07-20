@@ -1,7 +1,12 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
-module.exports = function (config) {
+interface KarmaConfig {
+  set: (config: object) => void;
+  LOG_INFO?: number;
+}
+
+module.exports = function (config: KarmaConfig) {
   config.set({
     basePath: '',
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
