@@ -11,20 +11,18 @@ module.exports = function (config) {
       require('karma-jasmine-html-reporter'),
       require('karma-coverage'),
       require('@angular-devkit/build-angular/plugins/karma'),
-      require('karma-junit-reporter') // <--- Add this line for JUnit reporting
+      require('karma-junit-reporter') // <--- THIS LINE IS ABSOLUTELY ESSENTIAL AND MUST BE PRESENT
     ],
     client: {
       jasmine: {
-        // you can add configuration options for Jasmine here
-        // the possible options are listed at https://jasmine.github.io/api/edge/Configuration.html
-        defaultTimeoutInterval: 90000, // Increase timeout for CI environments if needed
+        defaultTimeoutInterval: 90000,
         stopSpecOnExpectationFailure: true,
         random: false
       },
-      clearContext: false // leave Jasmine Spec Runner output visible in browser
+      clearContext: false
     },
     jasmineHtmlReporter: {
-      suppressAll: true // removes the duplicated traces
+      suppressAll: true
     },
     coverageReporter: {
       dir: require('path').join(__dirname, './coverage/your-app-name'), // Replace 'your-app-name'
@@ -34,28 +32,30 @@ module.exports = function (config) {
         { type: 'text-summary' }
       ]
     },
-    reporters: ['progress', 'kjhtml', 'junit'], // <--- Add 'junit' here
-    junitReporter: { // <--- Configure JUnit reporter
-      outputDir: require('path').join(__dirname, './test-results'), // Directory for test reports
-      outputFile: 'junit-report.xml', // Name of the XML report file
-      suite: '', // Suite name (optional)
-      useBrowserName: false, // Do not add browser name to suite name
-      xmlVersion: '1' // XML report format version
+    // IMPORTANT: Let's simplify reporters for now to isolate the issue.
+    // Temporarily remove 'kjhtml' to ensure no conflicts.
+    reporters: ['progress', 'junit'], // <--- Ensure 'junit' is here. Removed 'kjhtml' temporarily.
+    junitReporter: {
+      outputDir: require('path').join(__dirname, './test-results'),
+      outputFile: 'junit-report.xml', // <--- Ensure this matches the Jenkinsfile
+      suite: '',
+      useBrowserName: false,
+      xmlVersion: '1'
     },
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
-    autoWatch: false, // Set to false for CI/CD
-    browsers: ['ChromeHeadless'], // <--- Use ChromeHeadless for CI/CD
-    singleRun: true, // <--- Set to true for CI/CD
-    restartOnFileChange: false, // Set to false for CI/CD
+    autoWatch: false,
+    browsers: ['ChromeHeadless'],
+    singleRun: true,
+    restartOnFileChange: false,
     customLaunchers: {
       ChromeHeadless: {
         base: 'Chrome',
         flags: [
           '--headless',
           '--disable-gpu',
-          '--no-sandbox', // Required for Jenkins in some environments
+          '--no-sandbox', // Still crucial for Jenkins
           '--remote-debugging-port=9222',
         ],
       },
